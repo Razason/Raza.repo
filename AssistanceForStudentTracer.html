@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Assistance Tracker</title>
+  <style>
+    button{
+        display: block;
+        padding: 5px;
+        margin: 10px;
+    }
+    body{
+        background: rgb(222, 207, 207);
+    }
+    pre{
+        font-family: sans-serif;
+        font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>STUDENTS ASSISTANCE TRACKER</h1>
+  <form>
+    <label for="entry">Entry:</label>
+    <input type="text" id="entry" name="entry" required>
+    <button type="button" onclick="addEntry()">Add Entry</button>
+    <button type="button" onclick="summary()">Summary</button>
+  </form>
+  <h2>Entries</h2>
+  <ul id="entries"></ul>
+  <h2>Summary</h2>
+  <pre id="summary"></pre>
+
+  <script>
+    function addEntry() {
+      var entry = document.getElementById("entry").value.trim();
+      if (entry === "") {
+        alert("Invalid entry");
+        return;
+      }
+
+      var entryComponents = entry.split(" ");
+      if (entryComponents.length !== 3) {
+        alert("Invalid entry");
+        return;
+      }
+
+      var directoryId = entryComponents[0];
+      var description = entryComponents[1];
+      var duration = entryComponents[2];
+
+      var entriesSection = document.getElementById("entries");
+      var entryItem = document.createElement("li");
+      entryItem.textContent = directoryId + description + duration;
+      entriesSection.appendChild(entryItem);
+
+      document.getElementById("entry").value = "";
+    }
+
+    function summary() {
+      var entriesSection = document.getElementById("entries");
+      var entries = Array.from(entriesSection.getElementsByTagName("li"));
+
+      var sortedEntries = entries.sort(function(a, b) {
+        var durationA = parseInt(a.textContent.match(/\d+$/)[0]);
+        var durationB = parseInt(b.textContent.match(/\d+$/)[0]);
+        return durationA - durationB;
+      });
+
+      var summarySection = document.getElementById("summary");
+      summarySection.textContent = "Total entries: " + entries.length + "\n";
+      for (var i = 0; i < sortedEntries.length; i++) {
+        summarySection.textContent += sortedEntries[i].textContent;
+        summarySection.textContent += "\n";
+      }
+    }
+  </script>
+</body>
+</html>
